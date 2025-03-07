@@ -3,6 +3,12 @@
 ## Description
 A Godot plugin that counts polygons and vertices for selected `MeshInstance3D`, `CSGShape3D`, and `CSGCombiner3D` nodes in the scene.
 
+> [!IMPORTANT]
+> This plugin is still very immature. If you find any bugs, please make a issue.
+
+> [!TIP]
+> If you want to contribute and make this plugin better for everyone, please do not hesitate to make a pull request.
+
 ## Installation
 1. Download the `polygon_counter` folder.
 2. Place it in your project's `addons/` directory.
@@ -21,5 +27,5 @@ A Godot plugin that counts polygons and vertices for selected `MeshInstance3D`, 
 
 ## License
 MIT License (see LICENSE.md)
-# PolygonCounter
-Displays polygon and vertex count for selected MeshInstance3D nodes.
+
+
