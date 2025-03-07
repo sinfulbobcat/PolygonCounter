@@ -1,3 +1,11 @@
+<p align="center">
+  <img src="https://raw.githubusercontent.com/sinfulbobcat/PolygonCounter/main/icon.svg" 
+       alt="Sublime's custom image" 
+       width="500" 
+       height="500" 
+       style="border: 5px solid #000000; border-radius: 10px;"/>
+</p>
+
 # Polygon Counter Plugin
 
 ## Description
