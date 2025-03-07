@@ -12,7 +12,7 @@
 A Godot plugin that counts polygons and vertices for selected `MeshInstance3D`, `CSGShape3D`, and `CSGCombiner3D` nodes in the scene.
 
 > [!IMPORTANT]
-> This plugin is still very immature. If you find any bugs, please make a issue.
+> This plugin is still very immature. Things WILL BREAK. If you find any bugs, please make a issue.
 
 > [!TIP]
 > If you want to contribute and make this plugin better for everyone, please do not hesitate to make a pull request.
@@ -30,10 +30,8 @@ A Godot plugin that counts polygons and vertices for selected `MeshInstance3D`, 
 - Toggle visibility with the "Poly Count" button in the toolbar.
 
 ## Known Limitations
-- CSG node counting uses manual values (12 polygons, 8 vertices for a default `CSGBox3D`) due to a bug in Godot 4.4 alpha with `get_meshes()`. This may not reflect modified shapes.
+- 
 - Tested on Godot 4.4 alpha; compatibility with other versions (e.g., 4.3) is unverified.
 
 ## License
 MIT License (see LICENSE.md)
-
-
