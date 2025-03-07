@@ -73,7 +73,7 @@ func _enter_tree():
 	toggle_button.set_pressed_no_signal(true)
 	toggle_button.custom_minimum_size = Vector2(100, 0)
 	toggle_button.connect("toggled", Callable(self, "_on_toggle_pressed"))
-	add_control_to_container(CONTAINER_TOOLBAR, toggle_button)
+	#add_control_to_container(CONTAINER_TOOLBAR, toggle_button)
 	print("Toggle button added to toolbar")
 	
 	var selection = get_editor_interface().get_selection()
