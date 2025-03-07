@@ -16,3 +16,9 @@ layout_mode = 2
 
 [node name="VertLabel" type="Label" parent="VBoxContainer"]
 layout_mode = 2
+
+[node name="version" type="Label" parent="VBoxContainer"]
+layout_mode = 2
+text = "PolygonCounter_0.8.2_alpha"
+horizontal_alignment = 2
+vertical_alignment = 1

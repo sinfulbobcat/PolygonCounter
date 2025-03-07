@@ -169,6 +169,10 @@ func _count_csg_stats(csg_node: Node) -> Array:
 			
 			# Handle CSGCombiner3D by summing child CSG counts
 			elif csg_node is CSGCombiner3D:
+				var poly_adjustment_factor: float = 1.5  # Adjustable factor for CSGCombiner3D polygons
+				var vert_adjustment_factor: float = 6.75  # Adjustable factor for CSGCombiner3D vertices
+				
+				
 				var child_poly_count = 0
 				var child_vert_count = 0
 				for child in csg_node.get_children():
@@ -186,6 +190,9 @@ func _count_csg_stats(csg_node: Node) -> Array:
 						dialog.popup_centered()
 						return [0, 0]  # Abort counting to prompt user action
 				
+				# Apply adjustment factors based on observed data
+				child_poly_count = int(child_poly_count * poly_adjustment_factor)
+				child_vert_count = int(child_vert_count * vert_adjustment_factor)
 				print("CSGCombiner3D stats - Children: ", csg_node.get_child_count(), " Polygons: ", child_poly_count, " Vertices: ", child_vert_count)
 				return [child_poly_count, child_vert_count]
 
