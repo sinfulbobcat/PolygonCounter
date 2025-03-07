@@ -35,15 +35,17 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.50436, -14.0696)
 polygon = PackedVector2Array(1.09365, 1.57651, 1.75922, 1.68701, 1.75342, -0.453189)
 
 [node name="CSGCombiner3D2" type="CSGCombiner3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -46.6428)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -25.6204)
 
 [node name="CSGBox3D" type="CSGBox3D" parent="CSGCombiner3D2"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -3.78388)
+transform = Transform3D(1, 0, 0, 0, 0.999919, -0.0127057, 0, 0.0127057, 0.999919, 0, 0, -3.78388)
 
 [node name="CSGBox3D2" type="CSGBox3D" parent="CSGCombiner3D2"]
 
 [node name="CSGTorus3D" type="CSGTorus3D" parent="CSGCombiner3D2"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.889796, -7.71121)
+sides = 3
+ring_sides = 3
 
 [node name="CSGCylinder3D" type="CSGCylinder3D" parent="CSGCombiner3D2"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.33919, 0, -8.71238)
