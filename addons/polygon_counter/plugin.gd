@@ -39,6 +39,16 @@ func _enter_tree():
 	poly_label.add_theme_color_override("font_color", Color.WHITE)
 	vert_label.add_theme_color_override("font_color", Color.WHITE)
 	
+	# Create and add toggle button
+	toggle_button = Button.new()
+	toggle_button.text = "Poly Count"
+	toggle_button.toggle_mode = true
+	toggle_button.set_pressed_no_signal(true)
+	toggle_button.custom_minimum_size = Vector2(100, 0)
+	toggle_button.connect("toggled", Callable(self, "_on_toggle_pressed"))
+	add_control_to_container(CONTAINER_TOOLBAR, toggle_button)
+	print("Toggle button added to toolbar")
+	
 	# Connect the selection signal to track the selected nodes
 	var selection = get_editor_interface().get_selection()
 	if selection:
@@ -91,8 +101,6 @@ func _count_mesh_stats(mesh: Mesh) -> Array:
 
 func _count_csg_stats(csg_node: Node) -> Array:
 	# Count the polygons and vertices for CSG (Constructive Solid Geometry) nodes
-
-	# Check if the node is of a shape type that has a mesh representation
 	if csg_node is CSGShape3D or csg_node is CSGCombiner3D:
 		csg_node.set("operation", csg_node.operation)  # Force an update of the CSG shape
 		csg_node._update_shape()
@@ -111,32 +119,30 @@ func _count_csg_stats(csg_node: Node) -> Array:
 				return [12, 8]  # 12 polygons (triangles), 8 vertices for a box
 
 			elif csg_node is CSGCylinder3D:
-				if csg_node.cone: #polygon counting for cone
-					return [csg_node.sides+csg_node.sides-2, csg_node.sides+1]
+				if csg_node.cone:  # Polygon counting for cone
+					return [csg_node.sides + csg_node.sides - 2, csg_node.sides + 1]
 				# A cylinder has 12 polygons by default (sides) and a varying number of vertices
 				# Assuming a simple cylinder with 12 sides
-				else : return [4*csg_node.sides-2, csg_node.sides*2]  # 12 triangles for sides + 2 vertices for top and bottom
-			
+				else:
+					return [4 * csg_node.sides - 2, csg_node.sides * 2]  # As per original formula
 			
 			elif csg_node is CSGTorus3D:
 				# Get the number of radial and tube segments from the torus
 				var radial_segments = csg_node.sides
 				var tube_segments = csg_node.ring_sides
-				
 				# A torus consists of radial_segments * tube_segments quads, each of which is two triangles
 				var poly_count = radial_segments * tube_segments * 2  # Two triangles per quad
-				var vertex_count = radial_segments * tube_segments # Two vertices per segment (start and end of the tube)
+				var vertex_count = radial_segments * tube_segments  # Two vertices per segment (start and end of the tube)
 				return [poly_count, vertex_count]
-			
 			
 			elif csg_node is CSGSphere3D:
 				var radial_segments = csg_node.radial_segments
 				var ring_segments = csg_node.rings
-				
 				# A sphere consists of radial_segments * tube_segments quads, each of which is two triangles
-				var poly_count = radial_segments * 2 *(1+ (ring_segments-2))  # Two triangles per quad
-				var vertex_count = radial_segments * (ring_segments-1) +2 # Two vertices per segment (start and end of the tube)
+				var poly_count = radial_segments * 2 * (1 + (ring_segments - 2))  # Two triangles per quad
+				var vertex_count = radial_segments * (ring_segments - 1) + 2  # Two vertices per segment (start and end of the tube)
 				return [poly_count, vertex_count]
+			
 			elif csg_node is CSGPolygon3D:
 				# Try to get the mesh data
 				var poly_count = 0
@@ -160,41 +166,31 @@ func _count_csg_stats(csg_node: Node) -> Array:
 				# Vertices: Front and back faces each have num_vertices
 				vertex_count = num_vertices * 2
 				return [poly_count, vertex_count]
-			# Handle other CSG nodes that might exist in Godot (fallback)
+			
+			# Handle CSGCombiner3D by summing child CSG counts
 			elif csg_node is CSGCombiner3D:
 				var child_poly_count = 0
 				var child_vert_count = 0
-				var child_count = 0
 				for child in csg_node.get_children():
 					if child is CSGShape3D:
 						var child_stats = _count_csg_stats(child)
 						child_poly_count += child_stats[0]
 						child_vert_count += child_stats[1]
-						child_count += 1
+					else:
+						# Warn user if non-CSGShape3D nodes are present
+						var dialog = AcceptDialog.new()
+						dialog.title = "Warning: Invalid Node in CSGCombiner3D"
+						dialog.dialog_text = "The CSGCombiner3D node contains a non-CSGShape3D node: " + child.name + ". Please remove it for accurate polygon/vertex counting."
+						dialog.connect("confirmed", Callable(dialog, "queue_free"))
+						add_child(dialog)
+						dialog.popup_centered()
+						return [0, 0]  # Abort counting to prompt user action
 				
-				# Adjust based on operation and number of children
-				var operation = csg_node.operation  # 0 = Union (merge shapes), 1 = Intersection (keep overlapping areas), 2 = Subtraction (subtract subsequent shapes from first)
-				var poly_adjustment_factor = 1.0
-				var vert_adjustment_factor = 1.0
-				
-				if operation == 0:  # Union
-					poly_adjustment_factor = 1.0 + 0.5 * log(1 + child_count)  # Logarithmic scaling for polygons
-					vert_adjustment_factor = 1.0 + 0.5 * log(1 + child_count)  # Further reduced multiplier for vertices
-				elif operation == 1:  # Intersection
-					poly_adjustment_factor = 0.8  # Intersection often reduces geometry
-					vert_adjustment_factor = 0.8
-				elif operation == 2:  # Subtraction
-					poly_adjustment_factor = 1.2  # Subtraction may add some triangles
-					vert_adjustment_factor = 1.5
-				
-				child_poly_count = int(child_poly_count * poly_adjustment_factor)
-				child_vert_count = int(child_vert_count * vert_adjustment_factor)
-				print("CSGCombiner3D stats - Operation: ", operation, " Children: ", child_count, " Polygons: ", child_poly_count, " Vertices: ", child_vert_count)
+				print("CSGCombiner3D stats - Children: ", csg_node.get_child_count(), " Polygons: ", child_poly_count, " Vertices: ", child_vert_count)
 				return [child_poly_count, child_vert_count]
 
 	# No valid stats obtained for the CSG node
 	return [0, 0]
-
 
 func _update_stats():
 	# Update the polygon and vertex count labels based on the selected nodes
