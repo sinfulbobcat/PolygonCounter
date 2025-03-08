@@ -1,13 +1,37 @@
-name: Create Archive
-on: [push]
+name: Create and Publish Archive
+on:
+  push:
+    branches:
+      - main # Trigger only on pushes to the main branch
+
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@master
+    
     - name: Archive Release
-      uses: thedoctor0/zip-release@0.7.5
+      uses: thedoctor0/zip-release@0.7.6
       with:
         type: 'zip'
         filename: 'release.zip'
         exclusions: '*.git* /*node_modules/* .editorconfig'
+    
+    - name: Create Release
+      id: create_release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ github.run_number }} # Unique tag per run, e.g., "1", "2", etc.
+        release_name: Release ${{ github.run_number }} # e.g., "Release 1"
+        draft: false
+        prerelease: false
+    
+    - name: Publish Release
+      uses: softprops/action-gh-release@v1
+      with:
+        files: release.zip
+        tag_name: ${{ github.run_number }} # Match the tag from create-release
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
