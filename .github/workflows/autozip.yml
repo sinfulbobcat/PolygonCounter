@@ -1,20 +1,13 @@
-name: Zip Release
-  uses: TheDoctor0/zip-release@0.7.6
-  with:
-    # Filename for archive
-    filename: # default is release.zip
-    # Base path for archive files
-    path: # optional, default is .
-    # Working directory before zipping
-    directory: # optional, default is .
-    # List of excluded files / directories
-    exclusions: # optional, default is 
-    # List of excluded files / directories with recursive wildcards (only applies on Windows with `zip` type)
-    recursive_exclusions: # optional, default is 
-    # Provide any custom parameters to the zipping command
-    custom: # optional, default is 
-    # Tool to use for archiving
-    type: # optional, default is zip
-    # An extra command that will run before zipping
-    command: # optional, default is 
-          
+name: Create Archive
+on: [push]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@master
+    - name: Archive Release
+      uses: thedoctor0/zip-release@0.7.5
+      with:
+        type: 'zip'
+        filename: 'release.zip'
+        exclusions: '*.git* /*node_modules/* .editorconfig'
