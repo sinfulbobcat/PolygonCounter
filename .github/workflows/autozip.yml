@@ -21,10 +21,10 @@ jobs:
       id: create_release
       uses: actions/create-release@v1
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.PAT_TOKEN }} # Use the PAT instead of GITHUB_TOKEN
       with:
-        tag_name: ${{ github.run_number }} # Unique tag per run, e.g., "1", "2", etc.
-        release_name: Release ${{ github.run_number }} # e.g., "Release 1"
+        tag_name: ${{ github.run_number }}
+        release_name: Release ${{ github.run_number }}
         draft: false
         prerelease: false
     
@@ -32,6 +32,6 @@ jobs:
       uses: softprops/action-gh-release@v1
       with:
         files: release.zip
-        tag_name: ${{ github.run_number }} # Match the tag from create-release
+        tag_name: ${{ github.run_number }}
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.PAT_TOKEN }} # Use the PAT here too
