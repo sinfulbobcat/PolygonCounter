@@ -1,23 +1,20 @@
-name: Zip Addons Folder
-
-on:
-  push:
-    branches:
-      - main
-
-jobs:
-  zip-addons:
-    runs-on: ubuntu-latest
-    
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-        
-      - name: Zip addons folder
-        run: zip -r addons.zip addons/
-        
-      - name: Upload artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: addons-zip
-          path: addons.zip
+name: Zip Release
+  uses: TheDoctor0/zip-release@0.7.6
+  with:
+    # Filename for archive
+    filename: # default is release.zip
+    # Base path for archive files
+    path: # optional, default is .
+    # Working directory before zipping
+    directory: # optional, default is .
+    # List of excluded files / directories
+    exclusions: # optional, default is 
+    # List of excluded files / directories with recursive wildcards (only applies on Windows with `zip` type)
+    recursive_exclusions: # optional, default is 
+    # Provide any custom parameters to the zipping command
+    custom: # optional, default is 
+    # Tool to use for archiving
+    type: # optional, default is zip
+    # An extra command that will run before zipping
+    command: # optional, default is 
+          
