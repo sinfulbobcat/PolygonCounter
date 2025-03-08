@@ -12,7 +12,7 @@ var toggle_button: Button
 var is_visible: bool = true
 var use_manual_csg_counting: bool = true
 var poly_adjustment_factor: float = 1.0
-var vert_adjustment_factor: float = 0.8
+var vert_adjustment_factor: float = 0.2
 
 func _enter_tree():
 	var dock_scene = load("res://addons/polygon_counter/dock.tscn")
