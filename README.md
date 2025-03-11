@@ -18,7 +18,7 @@ A Redot/Godot plugin that counts polygons and vertices for selected `MeshInstanc
 > If you want to contribute and make this plugin better for everyone, please do not hesitate to make a pull request.
 
 ## Installation
-1. Install it from [Asset Library]()
+1. Install it from [Asset Library](https://godotengine.org/asset-library/asset/3794)
 
 **OR,**
 1. Download the latest release.
